@@ -31,6 +31,8 @@ class ArrayToCSV extends ViewableObject
 
     protected $maxAgeInSeconds = 86400;
 
+    private $infiniteLoopEscape = false;
+
     public function __construct(string $fileName, array $array, ?int $maxAgeInSeconds = 86400)
     {
         $this->fileName = $fileName;
@@ -63,14 +65,9 @@ class ArrayToCSV extends ViewableObject
         fclose($file);
     }
 
-    protected $infiniteLoopEscape = false;
-
     public function redirectToFile(?Controller $controller = null)
     {
-        if(! $controller) {
-            $controller = Controller::curr();
-        }
-        $this->controller = $controller;
+        $this->controller = $controller ?: Controller::curr();
         $maxCacheAge = strtotime('Now') - ($this->maxAgeInSeconds);
         $path = $this->getFilePath();
         if(file_exists($path)) {
