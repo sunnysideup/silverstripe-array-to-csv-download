@@ -5,6 +5,8 @@ namespace Sunnysideup\ArrayToCsvDownload\Api;
 
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 
+use SilverStripe\Control\HTTPRequest;
+
 use SilverStripe\Control\Director;
 
 use SilverStripe\Control\Controller;
@@ -12,11 +14,15 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\ContentNegotiator;
 
 use SilverStripe\Core\Config\Config;
+
+use SilverStripe\Assets\Filesystem;
+
+use SilverStripe\View\ViewableData;
 use Soundasleep\Html2Text;
 
 
 
-class ArrayToCSV extends ViewableObject
+class ArrayToCSV extends ViewableData
 {
 
     private static $hidden_download_dir = '_csv_downloads';
