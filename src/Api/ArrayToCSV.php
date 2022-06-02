@@ -65,8 +65,11 @@ class ArrayToCSV extends ViewableObject
 
     protected $infiniteLoopEscape = false;
 
-    public function redirectToFile(Controller $controller = null)
+    public function redirectToFile(?Controller $controller = null)
     {
+        if(! $controller) {
+            $controller = Controller::curr();
+        }
         $this->controller = $controller;
         $maxCacheAge = strtotime('Now') - ($this->maxAgeInSeconds);
         $path = $this->getFilePath();
@@ -74,7 +77,7 @@ class ArrayToCSV extends ViewableObject
             $timeChange = filemtime($path);
             if($timeChange > $maxCacheAge) {
                 if($this->hiddenFile) {
-                    $this->controller->setResponse(HTTPRequest::send_file(file_get_contents($path), 'download.csv', 'text/csv'));
+                    $this->controller->setResponse(HTTPRequest::send_file(file_get_contents($path), $this->fileName, 'text/csv'));
                 } else {
                     return $this->controller->redirect($this->fileName);
                 }
