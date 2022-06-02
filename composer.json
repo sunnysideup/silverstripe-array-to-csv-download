@@ -6,14 +6,9 @@
     "Silverstripe-CMS",
     "CMS",
     "Silverstripe",
-    "link",
-    "delete",
-    "archive",
-    "home page",
-    "homepage",
-    "careful",
-    "cascade deletes",
-    "parents and children"
+    "export",
+    "csv",
+    "download"
   ],
   "require": {
     "silverstripe/framework": "^4.0",
