@@ -232,11 +232,11 @@ class ArrayToCSV extends ViewableData
 
     protected function isAssoc() : bool
     {
-        if (empty($this->array)) {
+        reset($this->array);
+        $row = $this->array[0] ?? [];
+        if (empty($row)) {
             return false;
         }
-        reset($this->array);
-        $row = $this->array[0];
         return array_keys($row) !== range(0, count($row) - 1);
     }
 
