@@ -156,9 +156,9 @@ class ArrayToCSV extends ViewableData
         $file = fopen($path, 'w');
         if ($this->isAssoc()) {
             $row = $this->array[0];
-            $this->rowCountCheck = count($row);
             if (empty($this->headers)) {
-                $this->headers = array_keys($row);
+                $keys = array_keys($row);
+                $this->headers = array_combine($keys, $keys);
             }
 
             fputcsv($file, $this->headers);
@@ -167,7 +167,7 @@ class ArrayToCSV extends ViewableData
         foreach ($this->array as $row) {
             $count = count($row);
             $newRow = [];
-            foreach ($this->headers as $key) {
+            foreach ($this->headers as $key => $label) {
                 try {
                     $newRow[$key] = Html2Text::convert(($row[$key] ?? ''), ['ignore_errors' => true]);
                 } catch (Exception $exception) {
