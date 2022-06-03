@@ -20,7 +20,7 @@ use SilverStripe\Assets\Filesystem;
 use SilverStripe\View\ViewableData;
 use Soundasleep\Html2Text;
 
-
+use Exception;
 
 class ArrayToCSV extends ViewableData
 {
@@ -60,13 +60,22 @@ class ArrayToCSV extends ViewableData
         }
         $file = fopen($path, 'w');
         if($this->isAssoc()) {
-            fputcsv($file, array_keys(reset($this->array)));
+            $row = $this->array[0];
+            $this->rowCountCheck = count($row);
+            $headers = array_keys($row);
+            fputcsv($file, $headers);
         }
         foreach ($this->array as $row) {
-            foreach($row as $key => $value) {
-                $row[$key] = Html2Text::convert($value);
+            $count = count($row);
+            $newRow = [];
+            foreach($headers as $key) {
+                try {
+                    $newRow[$key] = Html2Text::convert(($row[$key] ?? ''), ['ignore_errors' => true,]);
+                } catch (Exception $e) {
+                    $newRow[$key] = 'error';
+                }
             }
-            fputcsv($file, $row);
+            fputcsv($file, $newRow);
         }
         fclose($file);
     }
@@ -82,15 +91,16 @@ class ArrayToCSV extends ViewableData
                 if($this->hiddenFile) {
                     $this->controller->setResponse(HTTPRequest::send_file(file_get_contents($path), $this->fileName, 'text/csv'));
                 } else {
-                    return $this->controller->redirect($this->fileName);
+                    return $this->controller->redirect('/'.$this->fileName);
                 }
             }
         }
         $this->createFile();
         if($this->infiniteLoopEscape === false) {
             $this->infiniteLoopEscape = true;
-            $this->redirectToFile($controller);
+            return $this->redirectToFile($controller);
         }
+        return $this->controller->redirect('/'.$this->fileName);
     }
 
     protected function getFilePath() : string
@@ -101,7 +111,7 @@ class ArrayToCSV extends ViewableData
         } else {
             $dir = Controller::join_links(Director::baseFolder(), PUBLIC_DIR);
         }
-        Filesystem::makeFolder($path);
+        Filesystem::makeFolder($dir);
         $path = Controller::join_links($dir, $this->fileName);
 
         return (string) $path;
@@ -109,8 +119,12 @@ class ArrayToCSV extends ViewableData
 
     protected function isAssoc() : bool
     {
-        if (array() === $this->array) return false;
-        return array_keys($this->array) !== range(0, count($this->array) - 1);
+        if (empty($this->array)) {
+            return false;
+        }
+        reset($this->array);
+        $row = $this->array[0];
+        return array_keys($row) !== range(0, count($row) - 1);
     }
 
 
