@@ -47,3 +47,4 @@ class MyPageController extends PageController
             ->createFile();
     }
 }
+```

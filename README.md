@@ -1,3 +1,7 @@
+## tl;dr
+
+ * [Developer Docs](docs/en/INDEX.md)
+
 # Silverstripe Array to CSV Download module
 [![Build Status](https://travis-ci.org/sunnysideup/silverstripe-array-to-csv-download.svg?branch=master)](https://travis-ci.org/sunnysideup/silverstripe-array-to-csv-download)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sunnysideup/silverstripe-array-to-csv-download/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/sunnysideup/silverstripe-array-to-csv-download/?branch=master)
