@@ -167,7 +167,7 @@ class ArrayToCSV extends ViewableData
         foreach ($this->array as $row) {
             $count = count($row);
             $newRow = [];
-            foreach ($headers as $key) {
+            foreach ($this->headers as $key) {
                 try {
                     $newRow[$key] = Html2Text::convert(($row[$key] ?? ''), ['ignore_errors' => true]);
                 } catch (Exception $exception) {
