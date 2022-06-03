@@ -137,13 +137,8 @@ class ArrayToCSV extends ViewableData
     }
 
     /**
-     * e.g.
-     * [
-     *     "Key1" => "Label1"
-     *     "Key2" => "Label2"
-     *     "Key3" => "Label3"
-     * ]
-     * @param array $array
+     *
+     * @param  string $className
      * @return self
      */
     public function setHeadersFromClassName(string $className) : self
