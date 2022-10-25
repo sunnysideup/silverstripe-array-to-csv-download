@@ -196,7 +196,7 @@ class ArrayToCSV extends ViewableData
             $this->createFile();
         }
         if ($this->hiddenFile) {
-            return $this->controller->setResponse(HTTPRequest::send_file(file_get_contents($path), $this->fileName, 'text/csv'));
+            return HTTPRequest::send_file(file_get_contents($path), $this->fileName, 'text/csv');
         } else {
             return $this->controller->redirect($this->getFileUrl());
         }
