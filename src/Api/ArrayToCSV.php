@@ -60,6 +60,8 @@ class ArrayToCSV extends ViewableData
 
     private static $hidden_download_dir = '_csv_downloads';
 
+    private static $public_download_dir = 'csv-downloads';
+
     /**
      * internal.
      *
@@ -186,25 +188,26 @@ class ArrayToCSV extends ViewableData
         $this->controller = $controller ?: Controller::curr();
         $maxCacheAge = strtotime('Now') - ($this->maxAgeInSeconds);
         $path = $this->getFilePath();
+        $timeChange = 0;
         if (file_exists($path)) {
             $timeChange = filemtime($path);
-            if ($timeChange > $maxCacheAge) {
-                if ($this->hiddenFile) {
-                    $this->controller->setResponse(HTTPRequest::send_file(file_get_contents($path), $this->fileName, 'text/csv'));
-                } else {
-                    return $this->controller->redirect('/' . $this->fileName);
-                }
-            }
         }
-
-        $this->createFile();
-        if (false === $this->infiniteLoopEscape) {
-            $this->infiniteLoopEscape = true;
-
-            return $this->redirectToFile($controller);
+        if ($timeChange < $maxCacheAge) {
+            $this->createFile();
         }
+        if ($this->hiddenFile) {
+            return $this->controller->setResponse(HTTPRequest::send_file(file_get_contents($path), $this->fileName, 'text/csv'));
+        } else {
+            return $this->controller->redirect($this->getFileUrl());
+        }
+    }
 
-        return $this->controller->redirect('/' . $this->fileName);
+    protected function getFileUrl(): string
+    {
+        $path = $this->getFilePath();
+        $remove = Controller::join_links(Director::baseFolder(), PUBLIC_DIR);
+        $cleaned = str_replace($remove, '', $path);
+        return Director::absoluteURL($cleaned);
     }
 
     protected function getFilePath(): string
@@ -213,7 +216,8 @@ class ArrayToCSV extends ViewableData
             $hiddenDownloadDir = $this->Config()->get('hidden_download_dir') ?: '_csv_download_dir';
             $dir = Controller::join_links(Director::baseFolder(), $hiddenDownloadDir);
         } else {
-            $dir = Controller::join_links(Director::baseFolder(), PUBLIC_DIR);
+            $publicDownloadDir = $this->Config()->get('public_download_dir') ?: 'csvs';
+            $dir = Controller::join_links(ASSETS_PATH, $publicDownloadDir);
         }
 
         Filesystem::makeFolder($dir);
