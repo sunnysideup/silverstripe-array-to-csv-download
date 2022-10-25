@@ -109,7 +109,7 @@ class ArrayToCSV extends ViewableData
      */
     public function setHiddenFile(?bool $bool = true): self
     {
-        $this->hiddenFile = true;
+        $this->hiddenFile = $bool;
 
         return $this;
     }
