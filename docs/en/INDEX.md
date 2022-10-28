@@ -10,6 +10,7 @@ class MyPageController extends PageController
     private static $allowed_actions = [
         'csv' => true,
         'csvfancy' => true,
+        'showdownloadlinkforprivatefile' => 'ADMIN',
     ];
 
     public function csv($httpRequest)
@@ -28,10 +29,20 @@ class MyPageController extends PageController
         (new ArrayToCSV('private.csv', $this->getArray()))
             ->setHiddenFile(true)                           // dont provide public access to the file
             ->setHeaders($obj->getFieldLabels())            // set the CSV headers
-            ->setList(MyDataObject::get())                  // provide an SS_List 
             ->setHeadersFromClassName(MyDataObject::class)  // use the headers based on a class
+            ->setList(MyDataObject::get())                  // provide an SS_List
             ->setConcatenator('***')                        // if you have a multidimensional string then this is the glue used on implosion for CSV
             ->redirectToFile($this);                        // you always want to finish with this one.
+    }
+
+    public function showdownloadlinkforprivatefile($httpRequest)
+    {
+        // here are just some other example uses (you can mix and match here)
+        $obj = MyDataObject::get()->first();
+        # special options
+        echo (new ArrayToCSV('private.csv', $this->getArray()))
+            ->setHiddenFile(true)                                 // dont provide public access to the file
+            ->redirectToFile($this, true);                        // you always want to finish with this one.
     }
 
     protected function getArray() : array
