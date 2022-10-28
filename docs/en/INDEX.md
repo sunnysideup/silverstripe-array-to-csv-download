@@ -15,7 +15,7 @@ class MyPageController extends PageController
     public function csv($httpRequest)
     {
         // redirect to download
-        (ArrayToCSV::create('mydata.csv', $this->getArray(), 86400))
+        (ArrayToCSV::create('mydata.csv', $this->getArray(), 86400)) // cache the CSV for a day
             ->redirectToFile($this);
 
     }
