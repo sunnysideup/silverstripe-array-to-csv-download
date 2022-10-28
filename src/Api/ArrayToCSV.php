@@ -58,6 +58,14 @@ class ArrayToCSV extends ViewableData
      */
     protected $maxAgeInSeconds = 86400;
 
+    /**
+     * how to glue multi-dimensional values
+     *
+     * @var string
+     */
+    protected $concatenator = ' | ';
+    
+    
     private static $hidden_download_dir = '_csv_downloads';
 
     private static $public_download_dir = 'csv-downloads';
@@ -147,6 +155,17 @@ class ArrayToCSV extends ViewableData
 
         return $list;
     }
+
+
+    /**
+     * @param SS_List $list any type of list - e.g. DataList
+     */
+    public function setConcatenator(string $c): self
+    {
+        $this->concatenator = $c;
+
+        return $list;
+    }
     
     protected function flatternArray(array $array, ?string $prefix = '') : array
     {
@@ -160,7 +179,7 @@ class ArrayToCSV extends ViewableData
                         $this->flatternArray($value, $newKey)
                     ),
                     '',
-                    ' | '
+                    $this->concatenator
                 );
             } else {
                 $result[$newKey] = $value;
