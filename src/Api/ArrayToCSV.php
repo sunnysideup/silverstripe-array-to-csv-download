@@ -147,13 +147,30 @@ class ArrayToCSV extends ViewableData
 
         return $list;
     }
-
+    
+    public function flatternArray(array $array, ?string $prefix = '') : array
+    {
+        $result = [];
+        foreach ($array as $key => $value) {
+            $newKey = $prefix . (empty($prefix) ? '' : '.') . $key;
+            if (is_array($value)) {
+                $result = array_merge($result, $this->flatternArray($value, $newKey));
+            } else {
+                $result[$newKey] = $value;
+            }
+        }
+        
+        return $result;
+    }
+    
     public function createFile()
     {
         $path = $this->getFilePath();
         if (file_exists($path)) {
             unlink($path);
         }
+        
+        $this->array = $this->flatternArray($this->array);
 
         $file = fopen($path, 'w');
         if ($this->isAssoc()) {
