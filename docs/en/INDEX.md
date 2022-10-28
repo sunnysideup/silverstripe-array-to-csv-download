@@ -26,11 +26,11 @@ class MyPageController extends PageController
         $obj = MyDataObject::get()->first();
         # special options
         (new ArrayToCSV('private.csv', $this->getArray()))
-            ->setHiddenFile(false)
-            ->setHeaders($obj->getFieldLabels())
-            ->setList(MyDataObject::get())
-            ->setHeadersFromClassName(MyDataObject::class)
-            ->redirectToFile($this);
+            ->setHiddenFile(true)                           // dont provide public access to the file
+            ->setHeaders($obj->getFieldLabels())            // set the CSV headers
+            ->setList(MyDataObject::get())                  // provide an SS_List 
+            ->setHeadersFromClassName(MyDataObject::class)  // use the headers based on a class
+            ->redirectToFile($this);                        // you always want to finish with this one.
     }
 
     protected function getArray() : array
