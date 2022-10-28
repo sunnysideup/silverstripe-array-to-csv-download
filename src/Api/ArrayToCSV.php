@@ -64,8 +64,8 @@ class ArrayToCSV extends ViewableData
      * @var string
      */
     protected $concatenator = ' | ';
-    
-    
+
+
     private static $hidden_download_dir = '_csv_downloads';
 
     private static $public_download_dir = 'csv-downloads';
@@ -164,10 +164,10 @@ class ArrayToCSV extends ViewableData
     {
         $this->concatenator = $c;
 
-        return $list;
+        return $this;
     }
-    
-    protected function flatternArray(array $array, ?string $prefix = '') : array
+
+    protected function flattenArray(array $array, ?string $prefix = '') : array
     {
         $result = [];
         foreach ($array as $key => $value) {
@@ -175,8 +175,8 @@ class ArrayToCSV extends ViewableData
             if (is_array($value)) {
                 $result[$newKey] = http_build_query(
                     array_merge(
-                        $result, 
-                        $this->flatternArray($value, $newKey)
+                        $result,
+                        $this->flattenArray($value, $newKey)
                     ),
                     '',
                     $this->concatenator
@@ -187,15 +187,18 @@ class ArrayToCSV extends ViewableData
         }
         return $result;
     }
-    
+
     public function createFile()
     {
         $path = $this->getFilePath();
         if (file_exists($path)) {
             unlink($path);
         }
-        
-        $this->array = $this->flatternArray($this->array);
+
+        // make sure there is no recursion in array...
+        foreach($this->array as $index => $row) {
+            $this->array[$index] = $this->flattenArray($row);
+        }
 
         $file = fopen($path, 'w');
         if ($this->isAssoc()) {
@@ -225,7 +228,7 @@ class ArrayToCSV extends ViewableData
         fclose($file);
     }
 
-    public function redirectToFile(?Controller $controller = null)
+    public function redirectToFile(?Controller $controller = null, ?bool $returnLinkOnly = false)
     {
         $this->controller = $controller ?: Controller::curr();
         $maxCacheAge = strtotime('Now') - ($this->maxAgeInSeconds);
@@ -238,9 +241,17 @@ class ArrayToCSV extends ViewableData
             $this->createFile();
         }
         if ($this->hiddenFile) {
-            return HTTPRequest::send_file(file_get_contents($path), $this->fileName, 'text/csv');
+            if($returnLinkOnly) {
+                return '/downloadcsv/download/'.$this->fileName;
+            } else {
+                return HTTPRequest::send_file(file_get_contents($path), $this->fileName, 'text/csv');
+            }
         } else {
-            return $this->controller->redirect($this->getFileUrl());
+            if($returnLinkOnly) {
+                return $this->getFileUrl();
+            } else {
+                return $this->controller->redirect($this->getFileUrl());
+            }
         }
     }
 

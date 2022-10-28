@@ -1,0 +1,3 @@
+SilverStripe\Control\Director:
+  rules:
+    'downloadcsv//$Action/$ID/$OtherID': 'Sunnysideup\ArrayToCsvDownload\Control\HiddenDownloader'
