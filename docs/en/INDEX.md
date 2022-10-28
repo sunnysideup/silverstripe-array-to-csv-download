@@ -30,6 +30,7 @@ class MyPageController extends PageController
             ->setHeaders($obj->getFieldLabels())            // set the CSV headers
             ->setList(MyDataObject::get())                  // provide an SS_List 
             ->setHeadersFromClassName(MyDataObject::class)  // use the headers based on a class
+            ->setConcatenator('***')                        // if you have a multidimensional string then this is the glue used on implosion for CSV
             ->redirectToFile($this);                        // you always want to finish with this one.
     }
 
