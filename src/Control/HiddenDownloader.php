@@ -1,6 +1,8 @@
 <?php
 
 namespace Sunnysideup\ArrayToCsvDownload\Control;
+use SilverStripe\Security\Security;
+use SilverStripe\Security\Permission;
 use Sunnysideup\ArrayToCsvDownload\Api\ArrayToCSV;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
@@ -12,13 +14,15 @@ class HiddenDownloader extends Controller
 {
 
     private static $allowed_actions = [
-        'download' => 'ADMIN',
+        'download' => true,
     ];
-
 
 
     public function download(HTTPRequest $request)
     {
+        if(! Permission::check('ADMIN')) {
+            return Security::permissionFailure($this);
+        }
         $fileName = $this->request->param('ID').'.csv';
         $hiddenDownloadDir = Config::inst()->get(ArrayToCSV::class, 'hidden_download_dir') ?: '_csv_download_dir';
         $path = Controller::join_links(Director::baseFolder(), $hiddenDownloadDir, $fileName);
