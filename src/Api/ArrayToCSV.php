@@ -56,7 +56,7 @@ class ArrayToCSV extends ViewableData
      *
      * @var int
      */
-    protected $maxAgeInSeconds = 86400;
+    protected $maxAgeInSeconds = 0;
 
     /**
      * how to glue multi-dimensional values
