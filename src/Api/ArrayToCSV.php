@@ -153,7 +153,7 @@ class ArrayToCSV extends ViewableData
     {
         $this->array = $list->toNestedArray();
 
-        return $list;
+        return $this;
     }
 
 
@@ -167,7 +167,7 @@ class ArrayToCSV extends ViewableData
         return $this;
     }
 
-    protected function flattenArray(array $array, ?string $prefix = '') : array
+    protected function flattenArray(array $array, ?string $prefix = ''): array
     {
         $result = [];
         foreach ($array as $key => $value) {
@@ -196,7 +196,7 @@ class ArrayToCSV extends ViewableData
         }
 
         // make sure there is no recursion in array...
-        foreach($this->array as $index => $row) {
+        foreach ($this->array as $index => $row) {
             $this->array[$index] = $this->flattenArray($row);
         }
 
@@ -241,13 +241,13 @@ class ArrayToCSV extends ViewableData
             $this->createFile();
         }
         if ($this->hiddenFile) {
-            if($returnLinkOnly) {
+            if ($returnLinkOnly) {
                 return '/downloadcsv/download/'.$this->fileName;
             } else {
                 return HTTPRequest::send_file(file_get_contents($path), $this->fileName, 'text/csv');
             }
         } else {
-            if($returnLinkOnly) {
+            if ($returnLinkOnly) {
                 return $this->getFileUrl();
             } else {
                 return $this->controller->redirect($this->getFileUrl());
