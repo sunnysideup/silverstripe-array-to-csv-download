@@ -1,0 +1,45 @@
+diff --git a/composer.json b/composer.json
+index 037fed5..4f67c3c 100644
+--- a/composer.json
++++ b/composer.json
+@@ -11,7 +11,7 @@
+     "download"
+   ],
+   "require": {
+-    "silverstripe/recipe-cms": "^4 || ^5",
++    "silverstripe/recipe-cms": "^6.0",
+     "soundasleep/html2text": "^2.0"
+   },
+   "minimum-stability": "dev",
+@@ -29,5 +29,5 @@
+       "Sunnysideup\\ArrayToCsvDownload\\": "src/"
+     }
+   },
+-  "suggested": {}
++  "suggested": []
+ }
+diff --git a/src/Api/ArrayToCSV.php b/src/Api/ArrayToCSV.php
+index a11c454..48bab11 100644
+--- a/src/Api/ArrayToCSV.php
++++ b/src/Api/ArrayToCSV.php
+@@ -2,17 +2,17 @@
+ 
+ namespace Sunnysideup\ArrayToCsvDownload\Api;
+ 
++use SilverStripe\Model\ModelData;
++use SilverStripe\Model\List\SS_List;
+ use Exception;
+ use SilverStripe\Assets\Filesystem;
+ use SilverStripe\Control\Controller;
+ use SilverStripe\Control\Director;
+ use SilverStripe\Control\HTTPRequest;
+ use SilverStripe\Core\Injector\Injector;
+-use SilverStripe\ORM\SS_List;
+-use SilverStripe\View\ViewableData;
+ use Soundasleep\Html2Text;
+ 
+-class ArrayToCSV extends ViewableData
++class ArrayToCSV extends ModelData
+ {
+     /**
+      * can the csv file be accessed directly or only via controller?
