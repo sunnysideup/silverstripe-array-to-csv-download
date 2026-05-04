@@ -2,17 +2,17 @@
 
 namespace Sunnysideup\ArrayToCsvDownload\Api;
 
+use SilverStripe\Model\ModelData;
+use SilverStripe\Model\List\SS_List;
 use Exception;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\View\ViewableData;
 use Soundasleep\Html2Text;
 
-class ArrayToCSV extends ViewableData
+class ArrayToCSV extends ModelData
 {
     /**
      * can the csv file be accessed directly or only via controller?
@@ -147,7 +147,7 @@ class ArrayToCSV extends ViewableData
     }
 
     /**
-     * @param SS_List $list any type of list - e.g. DataList
+     * @param \SilverStripe\Model\List\SS_List $list any type of list - e.g. DataList
      */
     public function setList(SS_List $list): self
     {
@@ -158,7 +158,7 @@ class ArrayToCSV extends ViewableData
 
 
     /**
-     * @param SS_List $list any type of list - e.g. DataList
+     * @param \SilverStripe\Model\List\SS_List $list any type of list - e.g. DataList
      */
     public function setConcatenator(string $c): self
     {
