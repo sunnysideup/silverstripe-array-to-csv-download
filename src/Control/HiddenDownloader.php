@@ -23,6 +23,7 @@ class HiddenDownloader extends Controller
         if(! Permission::check('ADMIN')) {
             return Security::permissionFailure($this);
         }
+
         $fileName = $this->request->param('ID').'.csv';
         $hiddenDownloadDir = Config::inst()->get(ArrayToCSV::class, 'hidden_download_dir') ?: '_csv_download_dir';
         $path = Controller::join_links(Director::baseFolder(), $hiddenDownloadDir, $fileName);

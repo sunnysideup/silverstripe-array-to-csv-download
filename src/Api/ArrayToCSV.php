@@ -171,7 +171,7 @@ class ArrayToCSV extends ViewableData
     {
         $result = [];
         foreach ($array as $key => $value) {
-            $newKey = $prefix . (empty($prefix) ? '' : '.') . $key;
+            $newKey = $prefix . (in_array($prefix, [null, '', '0'], true) ? '' : '.') . $key;
             if (is_array($value)) {
                 $result[$newKey] = http_build_query(
                     array_merge(
@@ -185,6 +185,7 @@ class ArrayToCSV extends ViewableData
                 $result[$newKey] = $value;
             }
         }
+
         return $result;
     }
 
@@ -217,7 +218,7 @@ class ArrayToCSV extends ViewableData
             foreach ($this->headers as $key => $label) {
                 try {
                     $newRow[$key] = Html2Text::convert(($row[$key] ?? ''), ['ignore_errors' => true]);
-                } catch (Exception $exception) {
+                } catch (Exception) {
                     $newRow[$key] = 'error';
                 }
             }
@@ -237,21 +238,21 @@ class ArrayToCSV extends ViewableData
         if (file_exists($path)) {
             $timeChange = filemtime($path);
         }
+
         if ($timeChange < $maxCacheAge) {
             $this->createFile();
         }
+
         if ($this->hiddenFile) {
             if ($returnLinkOnly) {
                 return '/downloadcsv/download/'.$this->fileName;
             } else {
                 return HTTPRequest::send_file(file_get_contents($path), $this->fileName, 'text/csv');
             }
+        } elseif ($returnLinkOnly) {
+            return $this->getFileUrl();
         } else {
-            if ($returnLinkOnly) {
-                return $this->getFileUrl();
-            } else {
-                return $this->controller->redirect($this->getFileUrl());
-            }
+            return $this->controller->redirect($this->getFileUrl());
         }
     }
 
