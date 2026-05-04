@@ -147,7 +147,7 @@ class ArrayToCSV extends ModelData
     }
 
     /**
-     * @param \SilverStripe\Model\List\SS_List $list any type of list - e.g. DataList
+     * @param SS_List $list any type of list - e.g. DataList
      */
     public function setList(SS_List $list): self
     {
@@ -158,7 +158,7 @@ class ArrayToCSV extends ModelData
 
 
     /**
-     * @param \SilverStripe\Model\List\SS_List $list any type of list - e.g. DataList
+     * @param SS_List $list any type of list - e.g. DataList
      */
     public function setConcatenator(string $c): self
     {
