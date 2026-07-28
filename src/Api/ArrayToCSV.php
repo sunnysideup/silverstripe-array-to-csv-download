@@ -213,7 +213,6 @@ class ArrayToCSV extends ModelData
         }
 
         foreach ($this->array as $row) {
-            $count = count($row);
             $newRow = [];
             foreach ($this->headers as $key => $label) {
                 try {
@@ -223,7 +222,7 @@ class ArrayToCSV extends ModelData
                 }
             }
 
-            fputcsv($file, $newRow);
+            fputcsv($file, $newRow, ',', '"');
         }
 
         fclose($file);
