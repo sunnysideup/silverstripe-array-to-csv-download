@@ -2,14 +2,14 @@
 
 namespace Sunnysideup\ArrayToCsvDownload\Api;
 
-use SilverStripe\Model\ModelData;
-use SilverStripe\Model\List\SS_List;
 use Exception;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Model\List\SS_List;
+use SilverStripe\Model\ModelData;
 use Soundasleep\Html2Text;
 
 class ArrayToCSV extends ModelData
@@ -209,7 +209,7 @@ class ArrayToCSV extends ModelData
                 $this->headers = array_combine($keys, $keys);
             }
 
-            fputcsv($file, $this->headers);
+            fputcsv($file, $this->headers, ',', '"');
         }
 
         foreach ($this->array as $row) {
